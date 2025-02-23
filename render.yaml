@@ -11,14 +11,5 @@ services:
     buildCommand: bun install
     startCommand: bun start
 
-  - type: pserv
-    name: mongodb
-    runtime: docker
-    dockerfilePath: './DockerfileMongo'
-    autoDeploy: true
-    disk:
-      name: data
-      mountPath: /data/db
-      sizeGB: 10
 
 version: "1"
