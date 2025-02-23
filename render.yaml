@@ -8,9 +8,13 @@ services:
     - key: BUN_VERSION
       value: 1.1.0
     - key: MONGODB_URI
+      value: ____________________
     - key: S3_BUCKET_NAME
+      value: ____________________
     - key: S3_BUCKET_KEY
+      value: ____________________
     - key: S3_BUCKET_SECRET
+      value: ____________________
     
     region: oregon
     buildCommand: bun install
