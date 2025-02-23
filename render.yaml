@@ -11,9 +11,11 @@ services:
       value: ____________________
     - key: S3_BUCKET_NAME
       value: ____________________
-    - key: S3_BUCKET_KEY
+    - key: S3_BUCKET_REGION
       value: ____________________
-    - key: S3_BUCKET_SECRET
+    - key: S3_BUCKET_API_KEY
+      value: ____________________
+    - key: S3_BUCKET_API_SECRET
       value: ____________________
     
     region: oregon
