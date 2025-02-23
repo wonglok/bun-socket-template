@@ -1,8 +1,98 @@
-import { Elysia } from "elysia";
+import { Elysia, t } from "elysia";
+import { staticPlugin } from "@elysiajs/static";
+import { renderToReadableStream } from "react-dom/server";
+import { createElement } from "react";
+import { ReactApp } from "./react/ReactApp";
 
-const port = process.env.PORT || 3000;
-const app = new Elysia().get("/", () => "Hello Elysia").listen(port);
+// bundle client side react-code each time the server starts
+await Bun.build({
+  entrypoints: ["./src/react/index.tsx"],
+  outdir: "./public",
+  minify: true,
+  target: "browser",
+  sourcemap: "external",
+});
+
+const APP_PORT = process.env.PORT || 3005;
+
+const getHTML = async ({ title }: any) => {
+  // create our react App component
+  let seoData = {
+    title: title,
+  };
+
+  // render the app component to a readable stream
+  const stream = await renderToReadableStream(
+    //
+    createElement(ReactApp, {
+      seoData: seoData,
+    }),
+    {
+      bootstrapScriptContent: `
+        import('/public/index.js').then(({ hydrateReactSite }) => {
+          hydrateReactSite({ seoData: ${JSON.stringify(seoData)} });
+        })
+      `,
+    }
+  );
+
+  // output the stream as the response
+  return new Response(stream, {
+    headers: { "Content-Type": "text/html" },
+  });
+};
+const app = new Elysia({
+  websocket: {
+    perMessageDeflate: true,
+  },
+})
+  //
+  .use(staticPlugin())
+  .get("/", async () => {
+    return getHTML({ title: "hi" });
+  })
+  .get("/:slug", async ({ params: { slug } }) => {
+    return getHTML({ title: slug });
+  })
+
+  // .get("/id/:id", ({ params: { id } }) => id)
+  // .post("/mirror", ({ body }) => body, {
+  //   body: t.Object({
+  //     id: t.Number(),
+  //     name: t.String(),
+  //   }),
+  // })
+  // .ws("/chat", {
+  //   body: t.String(),
+  //   response: t.String(),
+  //   message(ws, message) {
+  //     ws.send(message);
+  //   },
+  // })
+  .ws("/ws", {
+    // validate incoming message
+    body: t.Object({
+      message: t.String(),
+    }),
+    query: t.Object({
+      id: t.String(),
+    }),
+    message(ws, { message }) {
+      // Get schema from `ws.data`
+      const { id } = ws.data.query;
+
+      //
+      ws.send({
+        id,
+        message,
+        time: Date.now(),
+      });
+    },
+  })
+  .listen(APP_PORT);
 
 console.log(
-  `🦊 Elysia is running at ${app.server?.hostname}:${app.server?.port}`
+  `🦊 Elysia is running at http://${app.server?.hostname}:${app.server?.port}`
 );
+
+export type App = typeof app;

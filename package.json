@@ -1,13 +1,21 @@
 {
+  "module": "src/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "bun run --watch src/index.ts",
     "start": "NODE_ENV=production bun src/index.ts"
   },
   "dependencies": {
-    "elysia": "latest"
+    "@elysiajs/eden": "^1.2.0",
+    "@elysiajs/static": "^0.6.0",
+    "elysia": "latest",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
   },
   "devDependencies": {
-    "@types/bun": "latest"
+    "@types/bun": "^1.2.3",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "bun-types": "latest"
   }
 }
