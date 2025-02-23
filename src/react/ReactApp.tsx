@@ -14,16 +14,13 @@ export function ReactApp({ seoData = {} }: {seoData: any}) {
       <meta name="viewport" content="width=device-width, initial-scale=1" />
     </head>
     <body>
-      <Counter></Counter>
+      <Counter title={seoData.title}></Counter>
     </body>
   </html>
 }
 
-export function Page ({ title = '', author = 'loklok'}) {
-    
-}
-function Counter ({}) {
-  const [count, setCount] = useState('123');
+function Counter ({ title = '' }) {
+  const [count, setCount] = useState(title );
   return  <div>
     <h1>Counter {count}</h1>
     <button onClick={() => setCount(count + 1)}>Increment</button>
