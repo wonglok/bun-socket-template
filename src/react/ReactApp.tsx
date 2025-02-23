@@ -15,18 +15,17 @@ export function ReactApp({ serverData = {} }: { serverData: any }) {
       <meta name="viewport" content="width=device-width, initial-scale=1" />
     </head>
     <body>
-      <Counter endpoint={serverData.endpoint} title={serverData.title}></Counter>
+      <Counter title={serverData.title}></Counter>
     </body>
   </html>
 }
 
-function Counter ({ endpoint  = '', title = '' }) {
+function Counter ({  title = '' }) {
   const [count, setCount] = useState(title);
 
   useEffect(() => {
     //
-
-    const api = treaty<App>(endpoint);
+    const api = treaty<App>(location.host);
 
     const chat = api.chat.subscribe();
 

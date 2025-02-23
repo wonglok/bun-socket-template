@@ -15,16 +15,10 @@ await Bun.build({
 
 const APP_PORT = process.env.PORT || 3005;
 
-const endpoint =
-  process.env.NODE_ENV === "production"
-    ? "domain.com"
-    : `localhost:${APP_PORT}`;
-
 const getHTML = async ({ title }: { title: string }) => {
   // create our react App component
   let serverData = {
     title: title,
-    endpoint: endpoint,
   };
 
   // render the app component to a readable stream
