@@ -4,6 +4,12 @@ import { renderToReadableStream } from "react-dom/server";
 import { createElement } from "react";
 import { ReactApp } from "./react/ReactApp";
 
+import { config } from "dotenv";
+
+config();
+
+// console.log(process.env.MONGODB_URI);
+
 // bundle client side react-code each time the server starts
 await Bun.build({
   entrypoints: ["./src/react/index.tsx"],
@@ -49,10 +55,13 @@ const app = new Elysia({
   //
   .use(staticPlugin())
   .get("/", async () => {
-    return getHTML({ title: "welcome!" });
+    return await getHTML({ title: "welcome!" });
+  })
+  .post("/bucket", async () => {
+    return "bucket";
   })
   .get("/:slug", async ({ params: { slug } }) => {
-    return getHTML({ title: slug });
+    return await getHTML({ title: slug });
   })
   // .put("/aa", async (ctx) => {
   //   ctx.body;

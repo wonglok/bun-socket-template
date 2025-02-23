@@ -8,6 +8,7 @@
   "dependencies": {
     "@elysiajs/eden": "^1.2.0",
     "@elysiajs/static": "^0.6.0",
+    "dotenv": "^16.4.7",
     "elysia": "latest",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
