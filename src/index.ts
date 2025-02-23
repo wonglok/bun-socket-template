@@ -54,23 +54,9 @@ const app = new Elysia({
   .get("/:slug", async ({ params: { slug } }) => {
     return getHTML({ title: slug });
   })
-
-  // .get("/id/:id", ({ params: { id } }) => id)
-  // .post("/mirror", ({ body }) => body, {
-  //   body: t.Object({
-  //     id: t.Number(),
-  //     name: t.String(),
-  //   }),
+  // .put("/aa", async (ctx) => {
+  //   ctx.body;
   // })
-
-  // .ws("/chat", {
-  //   body: t.String(),
-  //   response: t.String(),
-  //   message(ws, message) {
-  //     ws.send(message);
-  //   },
-  // })
-
   .ws("/chat", {
     // validate incoming message
     body: t.Object({
