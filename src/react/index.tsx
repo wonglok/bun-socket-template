@@ -5,6 +5,6 @@ import React from 'react'
 import { hydrateRoot } from 'react-dom/client'
 import {ReactApp} from './ReactApp'
 
-export const hydrateReactSite = ({ seoData }: any) => {
-    hydrateRoot(document, <ReactApp seoData={seoData} />)
+export const hydrateReactSite = ({ serverData }: any) => {
+    hydrateRoot(document, <ReactApp serverData={serverData} />)
 }

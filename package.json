@@ -10,7 +10,8 @@
     "@elysiajs/static": "^0.6.0",
     "elysia": "latest",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "wrouter": "^0.0.6"
   },
   "devDependencies": {
     "@types/bun": "^1.2.3",

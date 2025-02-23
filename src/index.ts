@@ -15,22 +15,28 @@ await Bun.build({
 
 const APP_PORT = process.env.PORT || 3005;
 
-const getHTML = async ({ title }: any) => {
+const endpoint =
+  process.env.NODE_ENV === "production"
+    ? "domain.com"
+    : `localhost:${APP_PORT}`;
+
+const getHTML = async ({ title }: { title: string }) => {
   // create our react App component
-  let seoData = {
+  let serverData = {
     title: title,
+    endpoint: endpoint,
   };
 
   // render the app component to a readable stream
   const stream = await renderToReadableStream(
     //
     createElement(ReactApp, {
-      seoData: seoData,
+      serverData: serverData,
     }),
     {
       bootstrapScriptContent: `
         import('/public/index.js').then(({ hydrateReactSite }) => {
-          hydrateReactSite({ seoData: ${JSON.stringify(seoData)} });
+          hydrateReactSite({ serverData: ${JSON.stringify(serverData)} });
         })
       `,
     }
@@ -49,7 +55,7 @@ const app = new Elysia({
   //
   .use(staticPlugin())
   .get("/", async () => {
-    return getHTML({ title: "hi" });
+    return getHTML({ title: "welcome!" });
   })
   .get("/:slug", async ({ params: { slug } }) => {
     return getHTML({ title: slug });
@@ -62,6 +68,7 @@ const app = new Elysia({
   //     name: t.String(),
   //   }),
   // })
+
   // .ws("/chat", {
   //   body: t.String(),
   //   response: t.String(),
@@ -69,24 +76,18 @@ const app = new Elysia({
   //     ws.send(message);
   //   },
   // })
-  .ws("/ws", {
-    // validate incoming message
-    body: t.Object({
-      message: t.String(),
-    }),
-    query: t.Object({
-      id: t.String(),
-    }),
-    message(ws, { message }) {
-      // Get schema from `ws.data`
-      const { id } = ws.data.query;
 
-      //
-      ws.send({
-        id,
-        message,
-        time: Date.now(),
-      });
+  .ws("/chat", {
+    body: t.Object({
+      auth: t.String(),
+    }),
+    response: t.String(),
+    message(ws, data) {
+      ws.send(
+        JSON.stringify({
+          auth: data.auth + "234",
+        })
+      );
     },
   })
   .listen(APP_PORT);
