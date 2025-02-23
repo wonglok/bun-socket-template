@@ -4,6 +4,7 @@ import { App } from '../index'
 // src/react/App.tsx
 import { treaty } from "@elysiajs/eden";
 import React, { useEffect, useState } from "react";
+import {v4} from 'uuid'
 
 export function ReactApp({ serverData = {} }: { serverData: any }) {
   return <html>
@@ -22,27 +23,38 @@ export function ReactApp({ serverData = {} }: { serverData: any }) {
 
 function Counter ({  title = '' }) {
   const [count, setCount] = useState(title);
-
+  const [chat, setChat]= useState<any>(false)
   useEffect(() => {
     //
     const api = treaty<App>(location.host);
 
-    const chat = api.chat.subscribe();
+    const chat = api.chat.subscribe({
+      query: {
+        id: `${v4()}`
+      }
+    });
 
     chat.subscribe(({data: message}) => {
       console.log("got", message);
+      setCount(JSON.stringify(message))
     });
 
     chat.on("open", () => {
       chat.send({
-        auth: "hello from client 123"
+        message: "hello from client 123"
       });
     });
+
+    setChat(chat)
 
     //
   }, [])
   return  <div>
     <h1>Counter {count}</h1>
-    <button onClick={() => setCount(count + 1)}>Increment</button>
+    <button onClick={() => {
+      chat.send({
+        message: "hello from client 123"
+      });
+    }}>Increment</button>
   </div>
 }

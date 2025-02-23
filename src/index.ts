@@ -72,16 +72,21 @@ const app = new Elysia({
   // })
 
   .ws("/chat", {
+    // validate incoming message
     body: t.Object({
-      auth: t.String(),
+      message: t.String(),
     }),
-    response: t.String(),
-    message(ws, data) {
-      ws.send(
-        JSON.stringify({
-          auth: data.auth + "234",
-        })
-      );
+    query: t.Object({
+      id: t.String(),
+    }),
+    message(ws, { message }) {
+      // Get schema from `ws.data`
+      const { id } = ws.data.query;
+      ws.send({
+        id,
+        message: message + "__" + Math.random(),
+        time: Date.now(),
+      });
     },
   })
   .listen(APP_PORT);
